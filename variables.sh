@@ -1,0 +1,6 @@
+#!/bin/bash
+
+MOUNTPOINT="/mnt/mydata"
+UUID="12345678-1234-1234-1234-123456789012"
+DEV_MAPPER_NAME="mydata"
+FSTYPE="btrfs"
