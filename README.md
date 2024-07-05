@@ -58,7 +58,7 @@ sudo mkfs.btrfs /dev/mapper/USB_EXT_RSYNC_A     # format the partition using BRT
 </pre>
 
 10. Setup unencrypted partition
-<pre>
+<pre>LUKS-Mount-Unmount-scripts
 $ lsblk -f /dev/sdX
 NAME   FSTYPE      FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
 sdd
@@ -68,4 +68,6 @@ sdd
 
 sudo mkdir /mnt/{info,data}
 sudo mount -t ext4 /dev/sdX1 /mnt/info
-
+cd /mnt/info && sudo git clone https://github.com/intrepidor/LUKS-Mount-Unmount-scripts.git
+cd /mnt/info && sudo mv LUKS-Mount-Unmount-scripts/*.sh .
+sudo rm -rf /mnt/info/LUKS-Mount-Unmount-scripts
