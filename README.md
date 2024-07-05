@@ -66,8 +66,22 @@ sdd
 └─sdX2 crypto_LUKS 2           9d19d0fc-f2d2-4158-8bb5-c13abc1dc090
 </pre>
 
+<pre>
 sudo mkdir /mnt/{info,data}
 sudo mount -t ext4 /dev/sdX1 /mnt/info
 cd /mnt/info && sudo git clone https://github.com/intrepidor/LUKS-Mount-Unmount-scripts.git
 cd /mnt/info && sudo mv LUKS-Mount-Unmount-scripts/*.sh .
 sudo rm -rf /mnt/info/LUKS-Mount-Unmount-scripts
+sudo chmod +x *.sh
+</pre>
+
+Configure variables.sh file. Use config.sh as a helper.
+<pre>
+   sudo /mnt/info/config.sh -l USB_EXT_RSYNC_A -d /dev/sdX -f btrfs > ./variables.sh
+</pre>
+
+Delete config.sh afterwards to future mistakes
+
+<pre>
+   sudo rm /mnt/info/config.sh
+</pre>
