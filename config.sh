@@ -25,13 +25,15 @@ done
 shift $((OPTIND-1))
 
 if [ -z "${xfstype}" ] || [ -z "${xlabel}" ] || [ -z "${xdevice}" ]; then
-    usage
-fi
-
-if [ -z "${xerr}" ]; then
-    uuid=$(lsblk ${xdevice} -f|grep crypto_LUKS|awk '{print $4}');
-    echo "MOUNTPOINT=/mnt/${xlabel}";
-    echo "UUID=${uuid}";
-    echo "DEV_MAPPER_NAME=${xlabel}";
-    echo "FSTYPE=${xfstype}";
+    usage;
+else
+    if [ -z "${xerr}" ]; then
+        uuid=$(lsblk ${xdevice} -f|grep crypto_LUKS|awk '{print $4}');
+        echo "#!/bin/bash"
+        echo
+        echo "MOUNTPOINT=\"/mnt/${xlabel}\"";
+        echo "UUID=\"${uuid}\"";
+        echo "DEV_MAPPER_NAME=\"${xlabel}\"";
+        echo "FSTYPE=\"${xfstype}\"";
+    fi
 fi
