@@ -17,7 +17,7 @@ q                           # quit
 <pre>
 $ lsblk /dev/sdX
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
-sdd      8:48   0  7.3T  0 disk
+sdX      8:48   0  7.3T  0 disk
 ├─sdX1   8:49   0  1.9G  0 part
 └─sdX2   8:50   0  7.3T  0 part
 </pre>
@@ -34,9 +34,9 @@ sudo cryptsetup open /dev/sdX2 USB_EXT_RSYNC_A    # open the partition and assig
 <pre>
 $ lsblk -f /dev/sdX
 NAME                FSTYPE      FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
-sdd
-├─sdX1              ext4        1.0         bed054d9-368e-4aed-92ed-9e278c3098e5
-└─sdX2              crypto_LUKS 2           9d19d0fc-f2d2-4158-8bb5-c13abc1dc090
+sdX
+├─sdX1              ext4        1.0         b1d064d3-341e-4bea-95ee-3e571c3358e4
+└─sdX2              crypto_LUKS 2           84002acf-f2d2-4158-8bb5-c35cb31450ab
 └─USB_EXT_RSYNC_A
 </pre>
 <pre>
@@ -61,9 +61,9 @@ sudo mkfs.btrfs /dev/mapper/USB_EXT_RSYNC_A     # format the partition using BRT
 <pre>LUKS-Mount-Unmount-scripts
 $ lsblk -f /dev/sdX
 NAME   FSTYPE      FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
-sdd
-├─sdX1 ext4        1.0         bed054d9-368e-4aed-92ed-9e278c3098e5
-└─sdX2 crypto_LUKS 2           9d19d0fc-f2d2-4158-8bb5-c13abc1dc090
+sdX
+├─sdX1 ext4        1.0         b1d064d3-341e-4bea-95ee-3e571c3358e4
+└─sdX2 crypto_LUKS 2           84002acf-f2d2-4158-8bb5-c35cb31450ab
 </pre>
 
 <pre>
@@ -92,21 +92,21 @@ Mount the encrypted partition
 sudo ./mount_encrypted_partition.sh   # enter pass phrase when requested
 
 #1 Creating mount point as /mnt/USB_RSYNC_A
-/dev/disk/by-uuid/9d19d0fc-f2d2-4158-8bb5-c13abc1dc090
+/dev/disk/by-uuid/84002acf-f2d2-4158-8bb5-c35cb31450ab
 
-#2 Unlocking LUKS container UUID=9d19d0fc-f2d2-4158-8bb5-c13abc1dc090 as USB_RSYNC_A
-Enter passphrase for /dev/disk/by-uuid/9d19d0fc-f2d2-4158-8bb5-c13abc1dc090: 
+#2 Unlocking LUKS container UUID=84002acf-f2d2-4158-8bb5-c35cb31450ab as USB_RSYNC_A
+Enter passphrase for /dev/disk/by-uuid/84002acf-f2d2-4158-8bb5-c35cb31450ab: 
 
 #3 Mounting the partition found inside the LUKS container to /mnt/USB_RSYNC_A
 
 SUCCESS: partition inside LUKS container mounted to /mnt/USB_RSYNC_A
 </pre>
 <pre>
-$ lsblk /dev/sdd
+$ lsblk /dev/sdX
 NAME            MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINTS
-sdd               8:48   0  7.3T  0 disk
-├─sdd1            8:49   0  1.9G  0 part  /mnt/info
-└─sdd2            8:50   0  7.3T  0 part
+sdX               8:48   0  7.3T  0 disk
+├─sdX1            8:49   0  1.9G  0 part  /mnt/info
+└─sdX2            8:50   0  7.3T  0 part
 └─USB_RSYNC_A 252:2    0  7.3T  0 crypt /mnt/USB_RSYNC_A      
 </pre>
 
@@ -119,7 +119,7 @@ $ sudo ./unmount_encrypted_partitions.sh
 #2 Locking LUKS container USB_RSYNC_A
 Device /dev/mapper/USB_RSYNC_A is not active.
 
-#3 Unmounting partition (uuid=9d19d0fc-f2d2-4158-8bb5-c13abc1dc090) containing LUKS container
+#3 Unmounting partition (uuid=84002acf-f2d2-4158-8bb5-c35cb31450ab) containing LUKS container
 
 SUCCESS: LUKS container partition unmounted and container closed.
 </pre>
