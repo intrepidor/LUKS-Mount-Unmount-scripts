@@ -29,14 +29,14 @@ sudo cryptsetup luksFormat /dev/sdX2  # Enter passphrase when requested
 
 5. Create filesystem in LUKS container
 <pre>
-sudo cryptsetup open /dev/sdd2 USB_EXT_RSYNC_A    # open the partition and assign label = USB_EXT_RSYNC_A
+sudo cryptsetup open /dev/sdX2 USB_EXT_RSYNC_A    # open the partition and assign label = USB_EXT_RSYNC_A
 </pre>
 <pre>
-$ lsblk -f /dev/sdd
+$ lsblk -f /dev/sdX
 NAME                FSTYPE      FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
 sdd
-├─sdd1              ext4        1.0         bed054d9-368e-4aed-92ed-9e278c3098e5
-└─sdd2              crypto_LUKS 2           9d19d0fc-f2d2-4158-8bb5-c13abc1dc090
+├─sdX1              ext4        1.0         bed054d9-368e-4aed-92ed-9e278c3098e5
+└─sdX2              crypto_LUKS 2           9d19d0fc-f2d2-4158-8bb5-c13abc1dc090
 └─USB_EXT_RSYNC_A
 </pre>
 <pre>
@@ -59,9 +59,13 @@ sudo mkfs.btrfs /dev/mapper/USB_EXT_RSYNC_A     # format the partition using BRT
 
 10. Setup unencrypted partition
 <pre>
-$ lsblk -f /dev/sdd
+$ lsblk -f /dev/sdX
 NAME   FSTYPE      FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
 sdd
-├─sdd1 ext4        1.0         bed054d9-368e-4aed-92ed-9e278c3098e5
-└─sdd2 crypto_LUKS 2           9d19d0fc-f2d2-4158-8bb5-c13abc1dc090
+├─sdX1 ext4        1.0         bed054d9-368e-4aed-92ed-9e278c3098e5
+└─sdX2 crypto_LUKS 2           9d19d0fc-f2d2-4158-8bb5-c13abc1dc090
 </pre>
+
+sudo mkdir /mnt/{info,data}
+sudo mount -t ext4 /dev/sdX1 /mnt/info
+
