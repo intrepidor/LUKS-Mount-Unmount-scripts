@@ -1,47 +1,67 @@
 # How to create an external LUKS encrypted USB disk
 
 1. Start with an empty External USB drive
+
 2. Configure the drive with two partitions.
 <pre>
-   sudo parted
-   mkpart prim ext4 1mb 4gb    # make 4gb partition that will not be encrypted
-   mkpart prim ext4 4gb 100%   # use remainder of disk for LUKS partition
-   align-check opt 1           # verify partitions are optimally aligned
-   align-check opt 2           # verify partitions are optimally aligned
-   print                       # verify all looks correct, including disk = GPT
-   q                           # quit
+sudo parted /dev/sdX
+mkpart info ext4 1mb 2gb    # make 2gb partition that will not be encrypted
+mkpart data ext4 2gb 100%   # use remainder of disk for LUKS partition
+align-check opt 1           # verify partitions are optimally aligned
+align-check opt 2           # verify partitions are optimally aligned
+print                       # verify all looks correct, including disk = GPT
+q                           # quit
 </pre>
-4. Confirm again
-   <pre>
-    $ lsblk /dev/sdd
-    NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
-    sdd      8:48   0  7.3T  0 disk
-    ├─sdd1   8:49   0  3.7G  0 part
-    └─sdd2   8:50   0  7.3T  0 part
-</pre>
-6. Create LUKS container
+
+3. Check results
 <pre>
-    sudo cryptsetup luksFormat /dev/sdd2  # Enter passphrase when requested
+$ lsblk /dev/sdX
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sdd      8:48   0  7.3T  0 disk
+├─sdX1   8:49   0  1.9G  0 part
+└─sdX2   8:50   0  7.3T  0 part
 </pre>
-7. Format LUKS container
+
+4. Create LUKS container
 <pre>
-    sudo cryptsetup open /dev/sdd2 USB_EXT_RSYNC_A    # open the partition and assign label = USB_EXT_RSYNC_A
-    $ lsblk /dev/sdd
-    NAME                MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINTS
-    sdd                   8:48   0  7.3T  0 disk
-    ├─sdd1                8:49   0  3.7G  0 part
-    └─sdd2                8:50   0  7.3T  0 part
-    └─USB_EXT_RSYNC_A 252:2    0  7.3T  0 crypt
-    sudo mkfs.btrfs /dev/mapper/USB_EXT_RSYNC_A     # format the partition using BRTFS
+sudo cryptsetup luksFormat /dev/sdX2  # Enter passphrase when requested
 </pre>
-8. Test mount the partition
+
+5. Create filesystem in LUKS container
+<pre>
+sudo cryptsetup open /dev/sdd2 USB_EXT_RSYNC_A    # open the partition and assign label = USB_EXT_RSYNC_A
+</pre>
+<pre>
+$ lsblk -f /dev/sdd
+NAME                FSTYPE      FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
+sdd
+├─sdd1              ext4        1.0         bed054d9-368e-4aed-92ed-9e278c3098e5
+└─sdd2              crypto_LUKS 2           9d19d0fc-f2d2-4158-8bb5-c13abc1dc090
+└─USB_EXT_RSYNC_A
+</pre>
+<pre>
+sudo mkfs.btrfs /dev/mapper/USB_EXT_RSYNC_A     # format the partition using BRTFS
+</pre>
+
+6. Test mount the partition
 <pre>
    sudo mkdir /mnt/scratch
    sudo mount -t btrfs /dev/mapper/USB_EXT_RSYNC_A /mnt/scratch 
 </pre>        
-9. Clean up
+
+7. Clean up
 <pre>
    sudo umount /mnt/scratch
+   sudo cryptsetup close USB_EXT_RSYNC_A
+   # or
    sudo cryptsetup close /dev/mapper/USB_EXT_RSYNC_A
 </pre>
-   
+
+10. Setup unencrypted partition
+<pre>
+$ lsblk -f /dev/sdd
+NAME   FSTYPE      FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
+sdd
+├─sdd1 ext4        1.0         bed054d9-368e-4aed-92ed-9e278c3098e5
+└─sdd2 crypto_LUKS 2           9d19d0fc-f2d2-4158-8bb5-c13abc1dc090
+</pre>
