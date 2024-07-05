@@ -39,4 +39,6 @@
 7. Clean up
 
    sudo umount /mnt/scratch
+   sudo cryptsetup close /dev/mapper/USB_EXT_RSYNC_A
+   
    
