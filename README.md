@@ -57,7 +57,7 @@ sudo mkfs.btrfs /dev/mapper/USB_EXT_RSYNC_A     # format the partition using BRT
    sudo cryptsetup close /dev/mapper/USB_EXT_RSYNC_A
 </pre>
 
-10. Setup unencrypted partition
+8. Setup unencrypted partition
 <pre>LUKS-Mount-Unmount-scripts
 $ lsblk -f /dev/sdX
 NAME   FSTYPE      FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
@@ -84,4 +84,42 @@ Delete config.sh afterwards to future mistakes
 
 <pre>
    sudo rm /mnt/info/config.sh
+</pre>
+
+9. Test
+Mount the encrypted partition
+<pre>
+sudo ./mount_encrypted_partition.sh   # enter pass phrase when requested
+
+#1 Creating mount point as /mnt/USB_RSYNC_A
+/dev/disk/by-uuid/9d19d0fc-f2d2-4158-8bb5-c13abc1dc090
+
+#2 Unlocking LUKS container UUID=9d19d0fc-f2d2-4158-8bb5-c13abc1dc090 as USB_RSYNC_A
+Enter passphrase for /dev/disk/by-uuid/9d19d0fc-f2d2-4158-8bb5-c13abc1dc090: 
+
+#3 Mounting the partition found inside the LUKS container to /mnt/USB_RSYNC_A
+
+SUCCESS: partition inside LUKS container mounted to /mnt/USB_RSYNC_A
+</pre>
+<pre>
+$ lsblk /dev/sdd
+NAME            MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINTS
+sdd               8:48   0  7.3T  0 disk
+├─sdd1            8:49   0  1.9G  0 part  /mnt/info
+└─sdd2            8:50   0  7.3T  0 part
+└─USB_RSYNC_A 252:2    0  7.3T  0 crypt /mnt/USB_RSYNC_A      
+</pre>
+
+10. Unmount the encrypted partition
+<pre>
+$ sudo ./unmount_encrypted_partitions.sh
+
+#1 Unmounting partition /dev/mapper/USB_RSYNC_A from LUKS container
+
+#2 Locking LUKS container USB_RSYNC_A
+Device /dev/mapper/USB_RSYNC_A is not active.
+
+#3 Unmounting partition (uuid=9d19d0fc-f2d2-4158-8bb5-c13abc1dc090) containing LUKS container
+
+SUCCESS: LUKS container partition unmounted and container closed.
 </pre>
