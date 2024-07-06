@@ -58,7 +58,13 @@ sudo mkfs.btrfs /dev/mapper/USB_EXT_RSYNC_A     # format the partition using BRT
    sudo cryptsetup close /dev/mapper/USB_EXT_RSYNC_A
 </pre>
 
-8. Setup unencrypted partition
+8. Optionally add details to /etc/fstab
+Add the following to /etc/fstab
+<pre>
+UUID=b1d064d3-341e-4bea-95ee-3e571c3358e4                  /mnt/info ext4  defaults,nofail 0 0
+UUID=/dev/mapper/luks-84002acf-f2d2-4158-8bb5-c35cb31450ab /mnt/data btrfs defaults,noatime,compress=zstd:1,nofail 0 0
+</pre>
+10. Setup unencrypted partition
 <pre>LUKS-Mount-Unmount-scripts
 $ lsblk -f /dev/sdX
 NAME   FSTYPE      FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
@@ -87,7 +93,7 @@ Delete config.sh afterwards to future mistakes
    sudo rm /mnt/info/config.sh
 </pre>
 
-9. Test
+10. Test
 Mount the encrypted partition
 <pre>
 sudo ./mount_encrypted_partition.sh   # enter pass phrase when requested
@@ -111,7 +117,7 @@ sdX               8:48   0  7.3T  0 disk
 └─USB_RSYNC_A 252:2    0  7.3T  0 crypt /mnt/USB_RSYNC_A      
 </pre>
 
-10. Unmount the encrypted partition
+11. Unmount the encrypted partition
 <pre>
 $ sudo ./unmount_encrypted_partitions.sh
 
