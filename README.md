@@ -27,8 +27,9 @@ sdX      8:48   0  7.3T  0 disk
 sudo cryptsetup luksFormat /dev/sdX2  # Enter passphrase when requested
 </pre>
 
-5. Create filesystem in LUKS container
+5. Create filesystems
 <pre>
+sudo mkfs.ext4 /dev/sdX1
 sudo cryptsetup open /dev/sdX2 USB_EXT_RSYNC_A    # open the partition and assign label = USB_EXT_RSYNC_A
 </pre>
 <pre>
